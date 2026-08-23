@@ -16,7 +16,6 @@ public class ArtemScreen extends Screen {
     private static int dragOffsetX = 0;
     private static int dragOffsetY = 0;
 
-    // Внутренний класс для модулей, чтобы не зависеть от других файлов
     public static class SimpleModule {
         public String name;
         public boolean enabled;
@@ -33,7 +32,6 @@ public class ArtemScreen extends Screen {
 
     public ArtemScreen() {
         super(Text.literal("ArtemPvP Client"));
-        // Добавляем наши модули
         modules.add(new SimpleModule("Shift Tap", "PLAYER", true));
         modules.add(new SimpleModule("Optimization", "CLIENT", true));
         modules.add(new SimpleModule("Keybinds HUD", "HUD", true));
@@ -102,11 +100,12 @@ public class ArtemScreen extends Screen {
         int mainX = this.width / 2 - 260;
         int mainY = this.height / 2 - 160;
 
-        if (button == 0 && mouseX >= HudOverlay.keybindsX && mouseX <= HudOverlay.keybindsX + 110 &&
-            mouseY >= HudOverlay.keybindsY && mouseY <= HudOverlay.keybindsY + 60) {
+        // Перетаскивание виджета через класс Overlay
+        if (button == 0 && mouseX >= Overlay.keybindsX && mouseX <= Overlay.keybindsX + 110 &&
+            mouseY >= Overlay.keybindsY && mouseY <= Overlay.keybindsY + 60) {
             draggingWidget = true;
-            dragOffsetX = (int) mouseX - HudOverlay.keybindsX;
-            dragOffsetY = (int) mouseY - HudOverlay.keybindsY;
+            dragOffsetX = (int) mouseX - Overlay.keybindsX;
+            dragOffsetY = (int) mouseY - Overlay.keybindsY;
             return true;
         }
 
@@ -136,7 +135,7 @@ public class ArtemScreen extends Screen {
 
             if (mouseX >= currentX && mouseX <= currentX + 180 && mouseY >= currentY && mouseY <= currentY + 38) {
                 module.enabled = !module.enabled;
-                return tues; // исправлено на true ниже
+                return true;
             }
             col++;
         }
@@ -147,8 +146,8 @@ public class ArtemScreen extends Screen {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (draggingWidget && button == 0) {
-            HudOverlay.keybindsX = (int) mouseX - dragOffsetX;
-            HudOverlay.keybindsY = (int) mouseY - dragOffsetY;
+            Overlay.keybindsX = (int) mouseX - dragOffsetX;
+            Overlay.keybindsY = (int) mouseY - dragOffsetY;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);

@@ -1,0 +1,22 @@
+name: Build Mod
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Build with Gradle
+        run: |
+          cd ArtemPvP-1.21.4-v2-source
+          chmod +x gradlew
+          ./gradlew build
+      - name: Upload Jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: ArtemPvPClient-jar
+          path: ArtemPvP-1.21.4-v2-source/build/libs/*.jar
+          

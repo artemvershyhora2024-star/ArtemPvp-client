@@ -1,16 +1,10 @@
 package com.artempvp.client.ui;
 
-import com.artempvp.client.module.Module;
-import com.artempvp.client.module.ModuleManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
-import java.util.List;
-
 public class ArtemScreen extends Screen {
-    private String selectedCategory = "HUD";
-    private final String[] categories = {"HUD", "VISUAL", "PLAYER", "CLIENT"};
 
     public ArtemScreen() {
         super(Text.literal("ArtemPvP Client"));
@@ -18,98 +12,66 @@ public class ArtemScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        // Обычная темная заливка БЕЗ размытия/блюра
-        context.fill(0, 0, this.width, this.height, 0x99000000);
+        // Тёмный полупрозрачный фон БЕЗ размытия
+        context.fill(0, 0, this.width, this.height, 0x80000000);
 
-        int mainX = this.width / 2 - 250;
-        int mainY = this.height / 2 - 150;
-        int mainWidth = 500;
-        int mainHeight = 300;
+        int centerX = this.width / 2;
 
-        // Основное окно
-        context.fill(mainX, mainY, mainX + mainWidth, mainY + mainHeight, 0xEE11121C);
+        // 1. Верхняя панель (ArtemPVP + FPS + MS)
+        drawBorderedRect(context, centerX - 110, 15, centerX + 110, 40, 0xEE0B0B12, 0xFFA822FF);
+        context.drawTextWithShadow(this.textRenderer, "✦ ArtemPVP", centerX - 95, 23, 0xFFFFFFFF);
+        context.drawTextWithShadow(this.textRenderer, "⚙  60 FPS  ≡  12 MS", centerX + 10, 23, 0xFFA8A8B8);
 
-        // Левая панель категорий
-        context.fill(mainX, mainY, mainX + 110, mainY + mainHeight, 0xEE161724);
+        // 2. Виджет: Cooldowns (слева)
+        drawWidget(context, centerX - 320, 70, 150, 90, "● Cooldowns");
+        context.drawTextWithShadow(this.textRenderer, "[?] Пласт", centerX - 305, 95, 0xFFFFFFFF);
+        context.drawTextWithShadow(this.textRenderer, "5.7c", centerX - 305, 107, 0xFFA8A8B8);
+        context.drawTextWithShadow(this.textRenderer, "🍎 Чарка", centerX - 305, 125, 0xFFFFFFFF);
 
-        // Заголовок
-        context.drawTextWithShadow(this.textRenderer, "ARTEM", mainX + 15, mainY + 15, 0xFF7C5CFC);
-        context.drawTextWithShadow(this.textRenderer, "DP  •  1.21.4", mainX + 60, mainY + 15, 0xFF6C6E7D);
+        // 3. Виджет: Keybinds
+        drawWidget(context, centerX - 155, 70, 120, 70, "■ Keybinds");
+        context.drawTextWithShadow(this.textRenderer, "| Hud", centerX - 145, 95, 0xFFA822FF);
+        context.drawTextWithShadow(this.textRenderer, "1", centerX - 55, 95, 0xFFA8A8B8);
+        context.drawTextWithShadow(this.textRenderer, "| JumpWave", centerX - 145, 112, 0xFFA822FF);
+        context.drawTextWithShadow(this.textRenderer, "5", centerX - 55, 112, 0xFFA8A8B8);
 
-        // Список категорий слева
-        int catY = mainY + 55;
-        for (String cat : categories) {
-            boolean isSelected = cat.equals(selectedCategory);
-            if (isSelected) {
-                context.fill(mainX + 10, catY - 5, mainX + 100, catY + 20, 0xFF5C3BFC);
-            }
-            context.drawTextWithShadow(this.textRenderer, cat, mainX + 20, catY, isSelected ? 0xFFFFFFFF : 0xFF8A8C9E);
-            catY += 35;
-        }
+        // 4. Виджет: Potions (центр)
+        drawWidget(context, centerX - 20, 70, 130, 160, "⚗ Potions");
+        context.drawTextWithShadow(this.textRenderer, "Свечение", centerX - 5, 95, 0xFFFF3333);
+        context.drawTextWithShadow(this.textRenderer, "35.8c", centerX - 5, 107, 0xFFA8A8B8);
+        context.drawTextWithShadow(this.textRenderer, "Поглощение IV", centerX - 5, 125, 0xFF3399FF);
+        context.drawTextWithShadow(this.textRenderer, "1:37", centerX - 5, 137, 0xFFA8A8B8);
+        context.drawTextWithShadow(this.textRenderer, "Сила III", centerX - 5, 155, 0xFFFF3333);
+        context.drawTextWithShadow(this.textRenderer, "2:22", centerX - 5, 167, 0xFFA8A8B8);
 
-        // Модули выбранной категории
-        List<Module> modules = ModuleManager.getInstance().getModulesByCategory(selectedCategory);
-        int modX = mainX + 125;
-        int modY = mainY + 30;
-        int col = 0;
+        // 5. Виджет: Inventory (справа вверху)
+        drawWidget(context, centerX + 125, 70, 160, 100, "⬡ Inventory");
+        context.drawTextWithShadow(this.textRenderer, "[ Предметы ]", centerX + 175, 115, 0xFFA8A8B8);
 
-        for (Module module : modules) {
-            int currentX = modX + (col % 2) * 175;
-            int currentY = modY + (col / 2) * 50;
-
-            // Карточка модуля
-            context.fill(currentX, currentY, currentX + 165, currentY + 42, 0xFF191A29);
-
-            // Индикатор включения
-            if (module.isEnabled()) {
-                context.fill(currentX, currentY, currentX + 3, currentY + 42, 0xFF5C3BFC);
-            }
-
-            context.drawTextWithShadow(this.textRenderer, module.getName(), currentX + 12, currentY + 10, 0xFFFFFFFF);
-            context.drawTextWithShadow(this.textRenderer, module.isEnabled() ? "ON" : "OFF", currentX + 12, currentY + 24, module.isEnabled() ? 0xFF55FF55 : 0xFF777777);
-
-            col++;
-        }
-
-        // Подпись снизу
-        context.drawTextWithShadow(this.textRenderer, "Click module • Esc close", mainX + 125, mainY + mainHeight - 20, 0xFF6C6E7D);
+        // 6. Виджет: Игрок (справа внизу)
+        drawWidget(context, centerX + 125, 180, 160, 50, "");
+        context.drawTextWithShadow(this.textRenderer, "ArtemPlayer", centerX + 140, 190, 0xFFFFFFFF);
+        context.fill(centerX + 140, 205, centerX + 270, 210, 0xFF22FF88); // Полоска здоровья
 
         super.render(context, mouseX, mouseY, delta);
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        int mainX = this.width / 2 - 250;
-        int mainY = this.height / 2 - 150;
-
-        // Клик по категориям
-        int catY = mainY + 55;
-        for (String cat : categories) {
-            if (mouseX >= mainX + 10 && mouseX <= mainX + 100 && mouseY >= catY - 5 && mouseY <= catY + 20) {
-                selectedCategory = cat;
-                return true;
-            }
-            catY += 35;
+    // Вспомогательный метод для отрисовки карточек
+    private void drawWidget(DrawContext context, int x, int y, int width, int height, String title) {
+        drawBorderedRect(context, x, y, x + width, y + height, 0xEE0B0B12, 0xFFA822FF);
+        if (!title.isEmpty()) {
+            context.drawTextWithShadow(this.textRenderer, title, x + 10, y + 8, 0xFFFFFFFF);
+            context.fill(x + 10, y + 22, x + width - 10, y + 23, 0x44A822FF);
         }
+    }
 
-        // Клик по модулям
-        List<Module> modules = ModuleManager.getInstance().getModulesByCategory(selectedCategory);
-        int modX = mainX + 125;
-        int modY = mainY + 30;
-        int col = 0;
-
-        for (Module module : modules) {
-            int currentX = modX + (col % 2) * 175;
-            int currentY = modY + (col / 2) * 50;
-
-            if (mouseX >= currentX && mouseX <= currentX + 165 && mouseY >= currentY && mouseY <= currentY + 42) {
-                module.toggle();
-                return true;
-            }
-            col++;
-        }
-
-        return super.mouseClicked(mouseX, mouseY, button);
+    // Вспомогательный метод для скруглённых/фиолетовых рамок
+    private void drawBorderedRect(DrawContext context, int x1, int y1, int x2, int y2, int fillColor, int borderColor) {
+        context.fill(x1, y1, x2, y2, fillColor);
+        context.fill(x1, y1, x2, y1 + 1, borderColor);
+        context.fill(x1, y2 - 1, x2, y2, borderColor);
+        context.fill(x1, y1, x1 + 1, y2, borderColor);
+        context.fill(x2 - 1, y1, x2, y2, borderColor);
     }
 
     @Override

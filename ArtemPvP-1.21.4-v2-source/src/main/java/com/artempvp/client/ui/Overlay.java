@@ -30,7 +30,7 @@ public class Overlay implements HudRenderCallback {
 
     private void drawWidget(DrawContext context, MinecraftClient client, int x, int y, int width, int height, String title) {
         drawBorderedRect(context, x, y, x + width, y + height, 0xEE0B0B12, 0xFFA822FF);
-        context.drawTextWithShadow(client.textRenderer, title, x + 8, y + 6, 0xFFFFFFFF);
+        drawContext.drawTextWithShadow(client.textRenderer, title, x + 8, y + 6, 0xFFFFFFFF);
     }
 
     private void drawBorderedRect(DrawContext context, int x1, int y1, int x2, int y2, int fillColor, int borderColor) {

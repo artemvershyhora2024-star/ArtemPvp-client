@@ -1,7 +1,7 @@
 package com.artempvp.client.ui;
 
-import com.artempvp.client.module.Module;
-import com.artempvp.client.module.ModuleManager;
+import com.artempvp.client.modules.Module;
+import com.artempvp.client.modules.ModuleManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -12,13 +12,18 @@ public class ArtemScreen extends Screen {
     private String selectedCategory = "HUD";
     private final String[] categories = {"HUD", "VISUAL", "PLAYER", "CLIENT"};
 
+    // Переменные для перетаскивания виджетов (Drag & Drop)
+    private static boolean draggingWidget = false;
+    private static int dragOffsetX = 0;
+    private static int dragOffsetY = 0;
+
     public ArtemScreen() {
         super(Text.literal("ArtemPvP Client"));
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        // Чёткий тёмный фон БЕЗ размытия
+        // Чёткий фон БЕЗ размытия
         context.fill(0, 0, this.width, this.height, 0x80000000);
 
         int mainX = this.width / 2 - 260;
@@ -26,7 +31,7 @@ public class ArtemScreen extends Screen {
         int mainWidth = 520;
         int mainHeight = 320;
 
-        // Главная подложка
+        // Главное окно
         context.fill(mainX, mainY, mainX + mainWidth, mainY + mainHeight, 0xEE11121C);
         context.fill(mainX, mainY, mainX + 110, mainY + mainHeight, 0xEE161724);
 
@@ -45,7 +50,7 @@ public class ArtemScreen extends Screen {
             catY += 35;
         }
 
-        // Модули выбранной категории
+        // Модули
         List<Module> modules = ModuleManager.getInstance().getModulesByCategory(selectedCategory);
         int modX = mainX + 125;
         int modY = mainY + 30;
@@ -55,7 +60,6 @@ public class ArtemScreen extends Screen {
             int currentX = modX + (col % 2) * 190;
             int currentY = modY + (col / 2) * 45;
 
-            // Карточка модуля
             context.fill(currentX, currentY, currentX + 180, currentY + 38, 0xFF191A29);
             if (module.isEnabled()) {
                 context.fill(currentX, currentY, currentX + 4, currentY + 38, 0xFFA822FF);
@@ -67,7 +71,8 @@ public class ArtemScreen extends Screen {
             col++;
         }
 
-        context.drawTextWithShadow(this.textRenderer, "Click module • Esc close", mainX + 125, mainY + mainHeight - 20, 0xFF6C6E7D);
+        // Подсказка по перетаскиванию
+        context.drawTextWithShadow(this.textRenderer, "Зажми ЛКМ на плашках HUD чтобы переместить их!", mainX + 125, mainY + mainHeight - 20, 0xFF6C6E7D);
 
         super.render(context, mouseX, mouseY, delta);
     }
@@ -77,6 +82,16 @@ public class ArtemScreen extends Screen {
         int mainX = this.width / 2 - 260;
         int mainY = this.height / 2 - 160;
 
+        // Проверка клика по HUD плашке Keybinds для перетаскивания
+        if (button == 0 && mouseX >= HudOverlay.keybindsX && mouseX <= HudOverlay.keybindsX + 110 &&
+            mouseY >= HudOverlay.keybindsY && mouseY <= HudOverlay.keybindsY + 60) {
+            draggingWidget = true;
+            dragOffsetX = (int) mouseX - HudOverlay.keybindsX;
+            dragOffsetY = (int) mouseY - HudOverlay.keybindsY;
+            return true;
+        }
+
+        // Клик по категориям
         int catY = mainY + 55;
         for (String cat : categories) {
             if (mouseX >= mainX + 10 && mouseX <= mainX + 100 && mouseY >= catY - 5 && mouseY <= catY + 20) {
@@ -86,6 +101,7 @@ public class ArtemScreen extends Screen {
             catY += 35;
         }
 
+        // Клик по модулям
         List<Module> modules = ModuleManager.getInstance().getModulesByCategory(selectedCategory);
         int modX = mainX + 125;
         int modY = mainY + 30;
@@ -103,6 +119,24 @@ public class ArtemScreen extends Screen {
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (draggingWidget && button == 0) {
+            HudOverlay.keybindsX = (int) mouseX - dragOffsetX;
+            HudOverlay.keybindsY = (int) mouseY - dragOffsetY;
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (button == 0) {
+            draggingWidget = false;
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override

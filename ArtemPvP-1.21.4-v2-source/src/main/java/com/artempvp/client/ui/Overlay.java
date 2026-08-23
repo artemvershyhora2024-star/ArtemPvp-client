@@ -5,7 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 
-public class HudOverlay implements HudRenderCallback {
+public class Overlay implements HudRenderCallback {
     public static int keybindsX = 10;
     public static int keybindsY = 50;
 

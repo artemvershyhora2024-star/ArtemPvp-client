@@ -1,7 +1,7 @@
 package com.artempvp.client.ui;
 
-import com.artempvp.client.modules.Module;
-import com.artempvp.client.modules.ModuleManager;
+import com.artempvp.client.module.Module;
+import com.artempvp.client.module.ModuleManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -18,7 +18,7 @@ public class ArtemScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        // Чёткий фон БЕЗ блюра
+        // Чёткий тёмный фон БЕЗ размытия
         context.fill(0, 0, this.width, this.height, 0x80000000);
 
         int mainX = this.width / 2 - 260;

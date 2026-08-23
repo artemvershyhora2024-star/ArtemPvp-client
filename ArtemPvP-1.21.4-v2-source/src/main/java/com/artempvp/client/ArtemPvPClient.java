@@ -15,7 +15,6 @@ public class ArtemPvPClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // Регистрация клавиши открытия меню (по умолчанию - R) с правильным KEYSYM
         openGuiKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.artempvp.gui",
                 InputUtil.Type.KEYSYM,
@@ -23,10 +22,8 @@ public class ArtemPvPClient implements ClientModInitializer {
                 "category.artempvp.client"
         ));
 
-        // Регистрация отрисовки HUD на экране игры
         HudRenderCallback.EVENT.register(new Overlay());
 
-        // Обработка нажатия клавиши для открытия нашего экрана
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openGuiKey.wasPressed()) {
                 client.setScreen(new ArtemScreen());

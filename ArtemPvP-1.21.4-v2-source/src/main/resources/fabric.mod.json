@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "artempvp",
+  "version": "${version}",
+  "name": "ArtemPvP",
+  "description": "Modern client-side HUD and visual utility client for Minecraft 1.21.4.",
+  "authors": ["Artem"],
+  "environment": "client",
+  "entrypoints": { "client": ["com.artempvp.client.ArtemPvPClient"] },
+  "depends": {
+    "fabricloader": ">=0.17.2",
+    "minecraft": "~1.21.4",
+    "fabric-api": "*"
+  }
+}

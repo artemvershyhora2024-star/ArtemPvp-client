@@ -1,7 +1,7 @@
 package com.artempvp.client.ui;
 
-import com.artempvp.client.modules.Module;
-import com.artempvp.client.modules.ModuleManager;
+import com.artempvp.client.module.Module;
+import com.artempvp.client.module.ModuleManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -12,7 +12,6 @@ public class ArtemScreen extends Screen {
     private String selectedCategory = "HUD";
     private final String[] categories = {"HUD", "VISUAL", "PLAYER", "CLIENT"};
 
-    // Переменные для перетаскивания виджетов (Drag & Drop)
     private static boolean draggingWidget = false;
     private static int dragOffsetX = 0;
     private static int dragOffsetY = 0;
@@ -23,7 +22,6 @@ public class ArtemScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        // Чёткий фон БЕЗ размытия
         context.fill(0, 0, this.width, this.height, 0x80000000);
 
         int mainX = this.width / 2 - 260;
@@ -31,15 +29,12 @@ public class ArtemScreen extends Screen {
         int mainWidth = 520;
         int mainHeight = 320;
 
-        // Главное окно
         context.fill(mainX, mainY, mainX + mainWidth, mainY + mainHeight, 0xEE11121C);
         context.fill(mainX, mainY, mainX + 110, mainY + mainHeight, 0xEE161724);
 
-        // Логотип
         context.drawTextWithShadow(this.textRenderer, "ARTEM", mainX + 15, mainY + 15, 0xFFA822FF);
         context.drawTextWithShadow(this.textRenderer, "PVP  •  1.21.4", mainX + 60, mainY + 15, 0xFF6C6E7D);
 
-        // Сайдбар категорий
         int catY = mainY + 55;
         for (String cat : categories) {
             boolean isSelected = cat.equals(selectedCategory);
@@ -50,7 +45,6 @@ public class ArtemScreen extends Screen {
             catY += 35;
         }
 
-        // Модули
         List<Module> modules = ModuleManager.getInstance().getModulesByCategory(selectedCategory);
         int modX = mainX + 125;
         int modY = mainY + 30;
@@ -71,7 +65,6 @@ public class ArtemScreen extends Screen {
             col++;
         }
 
-        // Подсказка по перетаскиванию
         context.drawTextWithShadow(this.textRenderer, "Зажми ЛКМ на плашках HUD чтобы переместить их!", mainX + 125, mainY + mainHeight - 20, 0xFF6C6E7D);
 
         super.render(context, mouseX, mouseY, delta);
@@ -82,7 +75,6 @@ public class ArtemScreen extends Screen {
         int mainX = this.width / 2 - 260;
         int mainY = this.height / 2 - 160;
 
-        // Проверка клика по HUD плашке Keybinds для перетаскивания
         if (button == 0 && mouseX >= HudOverlay.keybindsX && mouseX <= HudOverlay.keybindsX + 110 &&
             mouseY >= HudOverlay.keybindsY && mouseY <= HudOverlay.keybindsY + 60) {
             draggingWidget = true;
@@ -91,7 +83,6 @@ public class ArtemScreen extends Screen {
             return true;
         }
 
-        // Клик по категориям
         int catY = mainY + 55;
         for (String cat : categories) {
             if (mouseX >= mainX + 10 && mouseX <= mainX + 100 && mouseY >= catY - 5 && mouseY <= catY + 20) {
@@ -101,7 +92,6 @@ public class ArtemScreen extends Screen {
             catY += 35;
         }
 
-        // Клик по модулям
         List<Module> modules = ModuleManager.getInstance().getModulesByCategory(selectedCategory);
         int modX = mainX + 125;
         int modY = mainY + 30;

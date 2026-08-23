@@ -1,4 +1,3 @@
-
 package com.artempvp.client.ui;
 
 import net.minecraft.client.gui.DrawContext;
@@ -90,7 +89,7 @@ public class ArtemScreen extends Screen {
             col++;
         }
 
-        context.drawTextWithShadow(this.textRenderer, "Зажми ЛКМ на плашках HUD чтобы переместить их!", mainX + 125, mainY + mainHeight - 20, 0xFF6C6E7D);
+        context.drawTextWithShadow(this.textRenderer, "Зажми ЛКМ на плашке Keybinds в игре, чтобы двигать её", mainX + 125, mainY + mainHeight - 20, 0xFF6C6E7D);
 
         super.render(context, mouseX, mouseY, delta);
     }
@@ -100,7 +99,6 @@ public class ArtemScreen extends Screen {
         int mainX = this.width / 2 - 260;
         int mainY = this.height / 2 - 160;
 
-        // Перетаскивание виджета через класс Overlay
         if (button == 0 && mouseX >= Overlay.keybindsX && mouseX <= Overlay.keybindsX + 110 &&
             mouseY >= Overlay.keybindsY && mouseY <= Overlay.keybindsY + 60) {
             draggingWidget = true;

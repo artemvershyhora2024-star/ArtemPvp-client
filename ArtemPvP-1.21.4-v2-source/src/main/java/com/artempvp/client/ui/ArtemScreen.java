@@ -24,8 +24,7 @@ public final class ArtemScreen extends Screen {
 
     @Override
     public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        renderBackground(ctx, mouseX, mouseY, delta);
-
+      context.fill(0, 0, this.width, this.height, 0x99000000);
         int w = 760, h = 440;
         ctx.fill(panelX, panelY, panelX + w, panelY + h, 0xF00B0D12);
         ctx.fill(panelX, panelY, panelX + 190, panelY + h, 0xFF10121B);

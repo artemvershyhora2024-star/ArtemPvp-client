@@ -12,6 +12,10 @@ public class ArtemScreen extends Screen {
     private String selectedCategory = "HUD";
     private final String[] categories = {"HUD", "VISUAL", "PLAYER", "CLIENT"};
 
+    private static boolean draggingWidget = false;
+    private static int dragOffsetX = 0;
+    private static int dragOffsetY = 0;
+
     public static class SimpleModule {
         public String name;
         public boolean enabled;
@@ -86,7 +90,7 @@ public class ArtemScreen extends Screen {
             col++;
         }
 
-        context.drawTextWithShadow(this.textRenderer, "Нажми на модуль, чтобы включить/выключить", mainX + 125, mainY + mainHeight - 20, 0xFF6C6E7D);
+        context.drawTextWithShadow(this.textRenderer, "Зажми ЛКМ на плашках HUD чтобы переместить их!", mainX + 125, mainY + mainHeight - 20, 0xFF6C6E7D);
 
         super.render(context, mouseX, mouseY, delta);
     }
@@ -95,6 +99,15 @@ public class ArtemScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         int mainX = this.width / 2 - 260;
         int mainY = this.height / 2 - 160;
+
+        // Перетаскивание виджета через класс Overlay
+        if (button == 0 && mouseX >= Overlay.keybindsX && mouseX <= Overlay.keybindsX + 110 &&
+            mouseY >= Overlay.keybindsY && mouseY <= Overlay.keybindsY + 60) {
+            draggingWidget = true;
+            dragOffsetX = (int) mouseX - Overlay.keybindsX;
+            dragOffsetY = (int) mouseY - Overlay.keybindsY;
+            return true;
+        }
 
         int catY = mainY + 55;
         for (String cat : categories) {
@@ -128,6 +141,24 @@ public class ArtemScreen extends Screen {
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (draggingWidget && button == 0) {
+            Overlay.keybindsX = (int) mouseX - dragOffsetX;
+            Overlay.keybindsY = (int) mouseY - dragOffsetY;
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (button == 0) {
+            draggingWidget = false;
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override

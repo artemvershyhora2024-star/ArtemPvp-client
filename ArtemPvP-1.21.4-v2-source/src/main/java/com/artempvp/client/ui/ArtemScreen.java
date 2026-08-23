@@ -62,7 +62,7 @@ public final class ArtemScreen extends Screen {
 
         ctx.drawTextWithShadow(textRenderer, "Click module • Esc close",
                 panelX + 220, panelY + h - 28, 0xFF6F7380);
-        super.render(ctx, mouseX, mouseY, delta);
+        context.fill(0, 0, this.width, this.height, 0x99000000);
     }
 
     @Override

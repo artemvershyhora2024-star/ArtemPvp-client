@@ -12,10 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class TitleScreenMixin {
     @Inject(method = "init", at = @At("HEAD"), cancellable = true)
     private void onInit(CallbackInfo ci) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client != null) {
-            client.setScreen(new CustomMainMenu());
-            ci.cancel();
-        }
+        MinecraftClient.getInstance().setScreen(new CustomMainMenu());
+        ci.cancel();
     }
 }

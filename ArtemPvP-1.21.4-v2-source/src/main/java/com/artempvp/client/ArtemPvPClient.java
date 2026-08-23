@@ -15,10 +15,10 @@ public class ArtemPvPClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // Регистрация клавиши открытия меню (по умолчанию - R)
+        // Регистрация клавиши открытия меню (по умолчанию - R) с правильным KEYSYM
         openGuiKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.artempvp.gui",
-                InputUtil.Type.KEY_SYM,
+                InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_R,
                 "category.artempvp.client"
         ));

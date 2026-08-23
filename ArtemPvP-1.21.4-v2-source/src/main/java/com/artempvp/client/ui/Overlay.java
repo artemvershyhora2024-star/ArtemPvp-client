@@ -16,21 +16,19 @@ public class Overlay implements HudRenderCallback {
 
         int centerX = client.getWindow().getScaledWidth() / 2;
 
-        // 1. Верхний бар ArtemPVP (FPS / MS)
         drawBorderedRect(drawContext, centerX - 110, 10, centerX + 110, 32, 0xEE0B0B12, 0xFFA822FF);
         drawContext.drawTextWithShadow(client.textRenderer, "✦ ArtemPVP", centerX - 95, 17, 0xFFFFFFFF);
         int fps = client.getCurrentFps();
         drawContext.drawTextWithShadow(client.textRenderer, "⚙ " + fps + " FPS  ≡  12 MS", centerX + 10, 17, 0xFFA8A8B8);
 
-        // 2. Виджет Keybinds (который двигается мышкой в меню)
         drawWidget(drawContext, client, keybindsX, keybindsY, 110, 60, "■ Keybinds");
         drawContext.drawTextWithShadow(client.textRenderer, "| ShiftTap", keybindsX + 8, keybindsY + 22, 0xFFA822FF);
         drawContext.drawTextWithShadow(client.textRenderer, "H", keybindsX + 85, keybindsY + 22, 0xFFA8A8B8);
     }
 
-    private void drawWidget(DrawContext context, MinecraftClient client, int x, int y, int width, int height, String title) {
-        drawBorderedRect(context, x, y, x + width, y + height, 0xEE0B0B12, 0xFFA822FF);
-        context.drawTextWithShadow(client.textRenderer, title, x + 8, y + 6, 0xFFFFFFFF);
+    private void drawWidget(DrawContext c, MinecraftClient client, int x, int y, int width, int height, String title) {
+        drawBorderedRect(c, x, y, x + width, y + height, 0xEE0B0B12, 0xFFA822FF);
+        c.drawTextWithShadow(client.textRenderer, title, x + 8, y + 6, 0xFFFFFFFF);
     }
 
     private void drawBorderedRect(DrawContext context, int x1, int y1, int x2, int y2, int fillColor, int borderColor) {

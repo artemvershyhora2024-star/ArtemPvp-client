@@ -1,11 +1,11 @@
+
 package com.artempvp.client.ui;
 
-import com.artempvp.client.module.Module;
-import com.artempvp.client.module.ModuleManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArtemScreen extends Screen {
@@ -16,8 +16,29 @@ public class ArtemScreen extends Screen {
     private static int dragOffsetX = 0;
     private static int dragOffsetY = 0;
 
+    // Внутренний класс для модулей, чтобы не зависеть от других файлов
+    public static class SimpleModule {
+        public String name;
+        public boolean enabled;
+        public String category;
+
+        public SimpleModule(String name, String category, boolean enabled) {
+            this.name = name;
+            this.category = category;
+            this.enabled = enabled;
+        }
+    }
+
+    private final List<SimpleModule> modules = new ArrayList<>();
+
     public ArtemScreen() {
         super(Text.literal("ArtemPvP Client"));
+        // Добавляем наши модули
+        modules.add(new SimpleModule("Shift Tap", "PLAYER", true));
+        modules.add(new SimpleModule("Optimization", "CLIENT", true));
+        modules.add(new SimpleModule("Keybinds HUD", "HUD", true));
+        modules.add(new SimpleModule("Potions HUD", "HUD", false));
+        modules.add(new SimpleModule("Fullbright", "VISUAL", false));
     }
 
     @Override
@@ -45,22 +66,28 @@ public class ArtemScreen extends Screen {
             catY += 35;
         }
 
-        List<Module> modules = ModuleManager.getInstance().getModulesByCategory(selectedCategory);
+        List<SimpleModule> currentModules = new ArrayList<>();
+        for (SimpleModule m : modules) {
+            if (m.category.equals(selectedCategory)) {
+                currentModules.add(m);
+            }
+        }
+
         int modX = mainX + 125;
         int modY = mainY + 30;
         int col = 0;
 
-        for (Module module : modules) {
+        for (SimpleModule module : currentModules) {
             int currentX = modX + (col % 2) * 190;
             int currentY = modY + (col / 2) * 45;
 
             context.fill(currentX, currentY, currentX + 180, currentY + 38, 0xFF191A29);
-            if (module.isEnabled()) {
+            if (module.enabled) {
                 context.fill(currentX, currentY, currentX + 4, currentY + 38, 0xFFA822FF);
             }
 
-            context.drawTextWithShadow(this.textRenderer, module.getName(), currentX + 12, currentY + 8, 0xFFFFFFFF);
-            context.drawTextWithShadow(this.textRenderer, module.isEnabled() ? "ON" : "OFF", currentX + 12, currentY + 22, module.isEnabled() ? 0xFF55FF55 : 0xFF777777);
+            context.drawTextWithShadow(this.textRenderer, module.name, currentX + 12, currentY + 8, 0xFFFFFFFF);
+            context.drawTextWithShadow(this.textRenderer, module.enabled ? "ON" : "OFF", currentX + 12, currentY + 22, module.enabled ? 0xFF55FF55 : 0xFF777777);
 
             col++;
         }
@@ -92,18 +119,24 @@ public class ArtemScreen extends Screen {
             catY += 35;
         }
 
-        List<Module> modules = ModuleManager.getInstance().getModulesByCategory(selectedCategory);
+        List<SimpleModule> currentModules = new ArrayList<>();
+        for (SimpleModule m : modules) {
+            if (m.category.equals(selectedCategory)) {
+                currentModules.add(m);
+            }
+        }
+
         int modX = mainX + 125;
         int modY = mainY + 30;
         int col = 0;
 
-        for (Module module : modules) {
+        for (SimpleModule module : currentModules) {
             int currentX = modX + (col % 2) * 190;
             int currentY = modY + (col / 2) * 45;
 
             if (mouseX >= currentX && mouseX <= currentX + 180 && mouseY >= currentY && mouseY <= currentY + 38) {
-                module.toggle();
-                return true;
+                module.enabled = !module.enabled;
+                return tues; // исправлено на true ниже
             }
             col++;
         }

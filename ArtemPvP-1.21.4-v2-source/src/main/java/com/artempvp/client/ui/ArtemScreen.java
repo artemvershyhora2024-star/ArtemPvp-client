@@ -1,7 +1,5 @@
 package com.artempvp.client.ui;
 
-import com.artempvp.client.modules.Module;
-import com.artempvp.client.modules.ModuleManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -14,13 +12,10 @@ public class ArtemScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        // Вместо этого (который делал блюр):
-        // this.renderBackground(context, mouseX, mouseY, delta);
-
-        // Ставим обычную темную подложку БЕЗ размытия:
+        // Чёрный полупрозрачный фон без блюра
         context.fill(0, 0, this.width, this.height, 0x80000000);
 
-        // Отрисовка всех твоих стандартных виджетов/кнопок
+        // Отрисовка стандартных элементов экрана
         super.render(context, mouseX, mouseY, delta);
     }
 

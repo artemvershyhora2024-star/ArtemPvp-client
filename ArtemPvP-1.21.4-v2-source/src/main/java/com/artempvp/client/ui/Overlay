@@ -6,30 +6,26 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 
 public class HudOverlay implements HudRenderCallback {
+    public static int keybindsX = 10;
+    public static int keybindsY = 50;
 
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null || client.options.hudHidden) return;
-        if (client.currentScreen instanceof ArtemScreen) return; // Скрываем HUD при открытом меню
 
         int centerX = client.getWindow().getScaledWidth() / 2;
 
-        // 1. Верхняя панель (ArtemPVP + FPS + MS)
+        // 1. Верхний бар ArtemPVP (FPS / MS)
         drawBorderedRect(drawContext, centerX - 110, 10, centerX + 110, 32, 0xEE0B0B12, 0xFFA822FF);
         drawContext.drawTextWithShadow(client.textRenderer, "✦ ArtemPVP", centerX - 95, 17, 0xFFFFFFFF);
         int fps = client.getCurrentFps();
         drawContext.drawTextWithShadow(client.textRenderer, "⚙ " + fps + " FPS  ≡  12 MS", centerX + 10, 17, 0xFFA8A8B8);
 
-        // 2. Виджет Keybinds
-        drawWidget(drawContext, client, 10, 50, 110, 60, "■ Keybinds");
-        drawContext.drawTextWithShadow(client.textRenderer, "| ShiftTap", 18, 72, 0xFFA822FF);
-        drawContext.drawTextWithShadow(client.textRenderer, "H", 95, 72, 0xFFA8A8B8);
-
-        // 3. Виджет Potions
-        drawWidget(drawContext, client, 10, 120, 120, 80, "⚗ Potions");
-        drawContext.drawTextWithShadow(client.textRenderer, "Сила III", 18, 142, 0xFFFF3333);
-        drawContext.drawTextWithShadow(client.textRenderer, "2:22", 18, 154, 0xFFA8A8B8);
+        // 2. Виджет Keybinds (который двигается мышкой в меню)
+        drawWidget(drawContext, client, keybindsX, keybindsY, 110, 60, "■ Keybinds");
+        drawContext.drawTextWithShadow(client.textRenderer, "| ShiftTap", keybindsX + 8, keybindsY + 22, 0xFFA822FF);
+        drawContext.drawTextWithShadow(client.textRenderer, "H", keybindsX + 85, keybindsY + 22, 0xFFA8A8B8);
     }
 
     private void drawWidget(DrawContext context, MinecraftClient client, int x, int y, int width, int height, String title) {
